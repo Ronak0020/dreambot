@@ -21,9 +21,9 @@ module.exports = {
         
         const embed = new Discord.MessageEmbed()
         .setTitle(`Rank - ${target.username}`, target.displayAvatarURL())
-        .setDescription(`**Level -** ${user.level}\n**XP -** ${user.xp}\n**Server Rank -** #${pos}`)
+        .setDescription(`**Level -** ${user.level}\n**XP -** ${user.xp}/${Levels.xpFor(user.level + 1)}\n**Server Rank -** #${pos}`)
         .setColor('#d6cf7a')
-        .setThumbnail(target.displayAvatarURL())
+        .setThumbnail(target.avatarURL())
         .setFooter(client.user.username, client.user.displayAvatarURL())
         .setTimestamp()
         message.channel.send(embed);

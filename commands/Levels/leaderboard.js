@@ -24,7 +24,7 @@ module.exports = {
           const lbEmbed = new Discord.MessageEmbed()
           .setColor('#009696')
           .setDescription(`${lbembed.slice(0, 5).join('\n')}`)
-          .setAuthor(`${message.guild.name} Leaderboard`, message.guild.iconURL)
+          .setAuthor(`${message.guild.name} Leaderboard`, message.guild.iconURL())
           .setFooter(`Your position: ${pos} | Page: 1`)
         const msg = await message.channel.send({
           embed: lbEmbed

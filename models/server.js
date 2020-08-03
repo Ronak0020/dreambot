@@ -8,6 +8,8 @@ const server = new Schema({
   premiumDuration: {type: String, default: "None"},
   blacklistedChannels: [],
   blacklistedCommands: [],
+  autoroleModule: {type: Boolean, default: false},
+  autoroleRole: [],
   welcomeModule: {type: Boolean, default: false},
   leaveModule: {type: Boolean, default: false},
   welcomeMessage: {type: String, default: "Welcome to {serverName}, {memberMention} !"},

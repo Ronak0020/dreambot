@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const Server = require("../models/server");
 const Levels = require("../utils/levels.js");
 const {replaceLevelMessage} = require("../utils/utils");
-const { Mongoose } = require("mongoose");
 const cooldowns = new Collection();
 const lvlcool = new Set();
 Levels.setURL("mongodb://ronak0020:123ronak@ds259738.mlab.com:59738/heroku_85nc06pf");
@@ -37,9 +36,6 @@ module.exports = async(client, message) => {
     //====================LEVELS===================
     if(server.levelModule) {
       if(message.author.bot) return;
-    if(lvlcool.has(message.author.id)) {
-      return;
-    } else {
       const randomAmountOfXp = Math.floor(Math.random() * server.earnXp);
       const hasLeveledUp = await Levels.appendXp(message.author.id, message.guild.id, randomAmountOfXp);
       if (hasLeveledUp) {
@@ -54,12 +50,7 @@ module.exports = async(client, message) => {
           message.channel.send(replaceLevelMessage(server.levelUpMessage, message.author, user))
         }
       }
-      lvlcool.add(message.author.id);
-      setTimeout(() => {
-        lvlcool.delete(message.author.id)
-      }, 30 * 1000)
     }
-  }
 
     //====================MAIN=====================
     if (message.author.bot) return;
@@ -102,13 +93,13 @@ module.exports = async(client, message) => {
             totalSeconds %= 3600;
             let minutes = Math.floor(totalSeconds / 60);
             let seconds = Math.floor(totalSeconds % 60);
-              if(timeLeft > 60000 && timeLeft < 3600000) {
+              /*if(timeLeft > 60000 && timeLeft < 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${minLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft > 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${hourLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft < 60000) {
                 return message.reply(embed.setDescription(`Please wait ${timeLeft.toFixed(1) / 1000} more second(s) before reusing the \`${command.name}\` command. `));
-              }
+              }*/
           }
 
           timestamps.set(message.author.id, now);

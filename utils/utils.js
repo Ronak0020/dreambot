@@ -24,9 +24,9 @@ module.exports = class Util {
     }
     static replaceLevelMessage(msg, user, level) {
         return msg
-        .replace(/{memberMention}/gi, user)
+        .replace(/{memberMention}/gi, "<@" + user.id + ">")
         .replace(/{memberUsername}/gi, user.username)
-        .replace(/{memberUserTag}/gi, user.tag)
+        .replace(/{memberTag}/gi, user.tag)
         .replace(/{level}/gi, level.level)
         .replace(/{currentXp}/gi, level.xp)
     }
