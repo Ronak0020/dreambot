@@ -7,9 +7,10 @@ const Levels = require("../utils/levels.js");
 const {replaceLevelMessage} = require("../utils/utils");
 const cooldowns = new Collection();
 const lvlcool = new Set();
-Levels.setURL("mongodb://ronak0020:123ronak@ds259738.mlab.com:59738/heroku_85nc06pf");
+const dbUrl = process.env.MONGODBURL
+Levels.setURL(dbUrl);
 
-mongoose.connect("mongodb://ronak0020:123ronak@ds259738.mlab.com:59738/heroku_85nc06pf", {
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -93,13 +94,15 @@ module.exports = async(client, message) => {
             totalSeconds %= 3600;
             let minutes = Math.floor(totalSeconds / 60);
             let seconds = Math.floor(totalSeconds % 60);
-              /*if(timeLeft > 60000 && timeLeft < 3600000) {
+            const minLeft = ms(timeLeft, { long: true });
+              const hourLeft = ms(timeLeft, { long: true });
+              if(timeLeft > 60000 && timeLeft < 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${minLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft > 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${hourLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft < 60000) {
                 return message.reply(embed.setDescription(`Please wait ${timeLeft.toFixed(1) / 1000} more second(s) before reusing the \`${command.name}\` command. `));
-              }*/
+              }
           }
 
           timestamps.set(message.author.id, now);
