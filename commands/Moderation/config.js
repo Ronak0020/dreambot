@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const Server = require("../../models/server");
-const options = ["setlevelredirect", "levelupmessage", "levelupmessagechannel", "levelupmessagemodule", "levelmodule" ,"setprefix", "setxp", "blacklistchannel", "blacklistcommand", "whitelistchannel", "whitelistcommand"];
+const options = ["levelupmessageredirect", "levelupmessage", "levelupmessagechannel", "levelupmessagemodule", "levelmodule" ,"setprefix", "setxp", "blacklistchannel", "blacklistcommand", "whitelistchannel", "whitelistcommand"];
 const yes = ["yes", "on", "enable", "enabled"];
 const no = ["no", "off", "disable", "disabled"];
 const option2 = ["no", "off", "disable", "disabled", "yes", "on", "enable", "enabled"];
@@ -65,6 +65,93 @@ ${levelplaceholder.join(", ")}`));
             await server.save().catch(e => console.log(e));
             return message.channel.send(embed.setDescription("Level Up Message has been successfully updated!").addField("New Value :", util.replaceLevelMessage(server.levelUpMessage, message.author, user)))
           }
+          break;
+        case "levelupmessagemodule":
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current level up message module is :**
+${server.levelUpMessageModule ? "**Enabled**" : "**Disabled**"}
+
+To change this value, type the new value with the command (yes/no, enable/disable, on/off).
+**For Example :** \`${server.prefix}config levelupmessagemodule off\``));
+          if(args[1]) {
+            embed.addField("Previous Value :", server.levelUpMessageModule ? "**Enabled**" : "**Disabled**", true)
+            if(yes.includes(args[1].toLowerCase())) {
+              if(server.levelUpMessageModule) return message.channel.send(embed.setDescription("Hmm... Why would someone turn on something which is already turned on?"));
+            server.levelUpMessageModule = true;
+            await server.save().catch(e => console.log(e));
+      } else if(no.includes(args[1].toLowerCase())) {
+              if(!server.levelModule) return message.channel.send(embed.setDescription("Seems like the Level Up Messages are already turned off. You can not turn something off if they are already off... Can you?"));
+            server.levelUpMessageModule = false;
+            await server.save().catch(e => console.log(e));
+            }
+            return message.channel.send(embed.setDescription("Level Up Message Module has been successfully updated!").addField("New Value :", `${server.levelUpMessageModule ? "**Enabled**" : "**Disabled**"}`, true))
+          }
+          break;
+        case "levelupmessageredirect":
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current level up message redirection is :**
+${server.levelUpMessageRedirect ? "**Enabled**" : "**Disabled**"}
+
+To change this value, type the new value with the command (yes/no, enable/disable, on/off).
+**For Example :** \`${server.prefix}config levelupmessageredirect off\``));
+          if(args[1]) {
+            embed.addField("Previous Value :", server.levelUpMessageRedirect ? "**Enabled**" : "**Disabled**", true)
+            if(yes.includes(args[1].toLowerCase())) {
+              if(server.levelUpMessageRedirect) return message.channel.send(embed.setDescription("Hmm... Why would someone turn on something which is already turned on?"));
+            server.levelUpMessageRedirect = true;
+            await server.save().catch(e => console.log(e));
+      } else if(no.includes(args[1].toLowerCase())) {
+              if(!server.levelModule) return message.channel.send(embed.setDescription("Seems like the Level Up Messages redirection is already turned off. You can not turn something off if they are already off... Can you?"));
+            server.levelUpMessageRedirect = false;
+            await server.save().catch(e => console.log(e));
+            }
+            return message.channel.send(embed.setDescription("Level Up Message Redirection setting has been successfully updated!\nPlease make sure to add a redirection channel for the messages to show else bot will be crashed. Use `config levelupmessagechannel #channel` command to set a channel.").addField("New Value :", `${server.levelUpMessageRedirect ? "**Enabled**" : "**Disabled**"}`, true))
+          }
+          break;
+        case "levelupmessagechannel":
+          let channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[1]);
+          if(!channel) return message.reply("Oopsie! I can not find that channel! Please re-check my permissions or ID of the channel (if you provided ID)");
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current level up message channel is set to :**
+${server.levelUpMessageChannel}
+
+To change this value, type the new value with the command.
+**For Example :** \`${server.prefix}config levelupmessagechannel #level-ups\``));
+          if(channel) {
+            embed.addField("Previous Value :", "<#"+server.levelUpMessageChannel+">", true)
+            server.levelUpMessageChannel = channel.id;
+            server.levelUpMessageRedirect = true;
+            await server.save().catch(e => console.log(e));
+            return message.channel.send(embed.setDescription("Level Up Message Channel has been successfully updated!").addField("New Value :", channel, true))
+          }
+          break;
+        case "setxp":
+          let xp = parseInt(args[1]);
+          if(!args[1] || isNaN(args[1])) return message.channel.send(embed.setDescription(`**Current XP gain/message is set to :**
+${server.earnXp}
+
+To change this value, type the new value with the command.
+**For Example :** \`${server.prefix}config setxp 30\``));
+          if(xp) {
+            if(xp > 100) return message.reply("Uhh... I guess it will be no fun making xp gain/message that high. Enter a value below 100 please.");
+            embed.addField("Previous Value :", server.earnXp, true)
+            server.earnXp = xp;
+            await server.save().catch(e => console.log(e));
+            return message.channel.send(embed.setDescription("Xp gain/message has been successfully updated!").addField("New Value :", xp, true))
+          }
+          break;
+        case "setprefix":
+          let prefix = args[1];
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current prefix for this server is :**
+${server.prefix}
+
+To change this value, type the new value with the command.
+**For Example :** \`${server.prefix}config setprefix ?\``));
+          if(prefix) {
+            if(prefix.length > 4) return message.reply("Uhh... Isn't that too big prefix for a bot? Try something shorter.");
+            embed.addField("Previous Value :", server.prefix, true)
+            server.prefix = prefix;
+            await server.save().catch(e => console.log(e));
+            return message.channel.send(embed.setDescription("Prefix has been successfully updated!").addField("New Value :", prefix, true))
+          }
+          break;
       }
   });
 }
