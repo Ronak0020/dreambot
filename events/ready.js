@@ -2,10 +2,10 @@ module.exports = async(client) => {
     console.log(`Oh yeah! ${client.user.username} is now online!`);
 
     client.user.setPresence({
-        status: "dnd",
+        status: "online",
         activity: {
-            name: "My god Ronak for now :)",
-            type: "WATCHING"
+            name: "Legend loves DreamBaby",
+            type: "STREAMING"
         }
     })
 }
