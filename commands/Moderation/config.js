@@ -152,6 +152,77 @@ To change this value, type the new value with the command.
             return message.channel.send(embed.setDescription("Prefix has been successfully updated!").addField("New Value :", prefix, true))
           }
           break;
+          case "blacklistcommand":
+          let bcmd = server.blacklistedCommands.join("\n");
+          if(server.blacklistedCommands.length < 1) bcmd = "No commands have been blacklisted in this server.";
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current list of commands blacklisted in this server is :**
+\`${bcmd}\`
+
+To blacklist a command, provide the command name with this command.
+**For Example :** \`${server.prefix}config blacklistcommand meme\``));
+          if(args[1]) {
+            let command = client.commands.get(args[1]);
+      if (!command) command = client.commands.get(client.aliases.get(args[1]));
+            if(!command) return message.reply("Uhh... Seems like i do not even have that command. Why blacklisting something that i don't even have?");
+            if(server.blacklistedCommands.includes(command.name)) return message.reply("Uhh... That command seems to be blacklisted already.");
+            server.blacklistedCommands.push(command.name);
+            await server.save().catch(e => console.log(e));
+            return message.channel.send(embed.setDescription("Command has been successfully blacklisted! No one can use that command in this server now!"))
+          }
+          break;
+          case "blacklistchannel":
+          let bchn = server.blacklistedChannels.join("\n");
+          if(server.blacklistedChannels.length < 1) bchn = "No channels have been blacklisted in this server.";
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current list of channels blacklisted in this server is :**
+\`${bchn}\`
+
+To blacklist a channel, provide the channel mention/id name with this command. If a channel is blacklisted, no one will gain any xp in that channel.
+**For Example :** \`${server.prefix}config blacklistchannel #meme\``));
+          if(args[1]) {
+            let channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[1]);
+            if(!channel) return message.reply("Uhh... Seems like that channel doesn't exists. Please re-check the details u provided.");
+            if(server.blacklistedChannels.includes(channel.id)) return message.reply("Uhh... That channel seems to be blacklisted already.");
+            server.blacklistedChannels.push(channel.id);
+            await server.save().catch(e => console.log(e));
+            return message.channel.send(embed.setDescription("Channel has been successfully blacklisted! No one will gain any xp in that channel now!"))
+          }
+          break;
+        case "whitelistchannel":
+           let bchn2 = server.blacklistedChannels.join("\n");
+          if(server.blacklistedChannels.length < 1) bchn2 = "No channels have been blacklisted in this server.";
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current ID list of channels blacklisted in this server is :**
+\`${bchn2}\`
+
+To whitelist a channel, provide the channel mention/id with this command. If a channel is whitelisted, everyone will gain xp in that channel.
+**For Example :** \`${server.prefix}config whitelistchannel #meme\``));
+          if(args[1]) {
+            let channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[1]);
+            if(!server.blacklistedChannels.includes(channel.id)) return message.reply("Uhh... That channel is not blacklisted I suppose.");
+            let index = server.blacklistedChannels.indexOf(channel.id);
+            server.blacklistedChannels.splice(index, 1);
+            await server.save().catch(e => console.log(e));
+            return message.channel.send(embed.setDescription("Channel has been successfully whitelisted! Everyone will gain xp in that channel now!"))
+          }
+          break;
+          case "whitelistcommand":
+           let bcmd2 = server.blacklistedCommands.join("\n");
+          if(server.blacklistedCommands.length < 1) bcmd2 = "No commands have been blacklisted in this server.";
+          if(!args[1]) return message.channel.send(embed.setDescription(`**Current list of commands blacklisted in this server is :**
+\`${bcmd2}\`
+
+To whitelist a command, provide the command name with this command. If a command is whitelisted, everyone will be able to use it.
+**For Example :** \`${server.prefix}config whitelistcommand meme\``));
+          if(args[1]) {
+            let command = client.commands.get(args[1]);
+      if (!command) command = client.commands.get(client.aliases.get(args[1]));
+            if(!command) return message.reply("Uhh... Seems like I do not even have that command. Why whitelisting something that I don't even have?");
+            if(!server.blacklistedCommands.includes(command.name)) return message.reply("Uhh... That command seems to be in whitelist already.");
+            let ind = server.blacklistedCommands.indexOf(command.name);
+            server.blacklistedCommands.splice(ind, 1);
+            await server.save().catch(e => console.log(e));
+            return message.channel.send(embed.setDescription("Command has been successfully whitelisted! Everyone can use that command in this server now!"))
+          }
+          break;
       }
   });
 }

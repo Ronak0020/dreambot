@@ -7,7 +7,7 @@ const Levels = require("../utils/levels.js");
 const {replaceLevelMessage} = require("../utils/utils");
 const cooldowns = new Collection();
 const lvlcool = new Set();
-const dbUrl = process.env.MONGODBURL
+const dbUrl = process.env.MONGODBURL;
 Levels.setURL(dbUrl);
 
 mongoose.connect(dbUrl, {
@@ -32,10 +32,10 @@ module.exports = async(client, message) => {
       await newServer.save().catch(e => console.log(e));
     }
 
-    const prefix = server.prefix.toLowerCase();
+    const prefix = server.prefix;
     
     //====================LEVELS===================
-    if(server.levelModule) {
+    if(server.levelModule && !message.content.toLowerCase().startsWith(prefix) && !server.blacklistedChannels.includes(message.channel.id)) {
       if(message.author.bot) return;
       const randomAmountOfXp = Math.floor(Math.random() * server.earnXp);
       const hasLeveledUp = await Levels.appendXp(message.author.id, message.guild.id, randomAmountOfXp);
@@ -44,7 +44,7 @@ module.exports = async(client, message) => {
         const chn = message.guild.channels.cache.get(server.levelUpMessageChannel);
         if(server.levelUpMessageRedirect) {
           if(!server.levelUpMessageModule) return;
-          if(!chn) return message.guild.owner.send("Sorry to bother you but seems like there is a problem in " + message.guild.name + " regarding my settings. The level up message channel is set but the channel which is in my database can not be found. Please change the channel using `config setlevelupchannel <#channel | channelID>`");
+          if(!chn) return message.guild.owner.send("Sorry to bother you but seems like there is a problem in **" + message.guild.name + "** regarding my settings. The level up message channel is set but the channel which is in my database can not be found. Please change the channel using `config setlevelupchannel <#channel | channelID>`");
           chn.send(replaceLevelMessage(server.levelUpMessage, message.author, user));
         } else {
           if(!server.levelUpMessageModule) return;
@@ -66,7 +66,7 @@ module.exports = async(client, message) => {
 
       let command = client.commands.get(cmd);
       if (!command) command = client.commands.get(client.aliases.get(cmd));
-        
+        if(server.blacklistedCommands.includes(command.name)) return;
         if (!cooldowns.has(command.name)) {
           cooldowns.set(command.name, new Collection());
       }
@@ -94,7 +94,7 @@ module.exports = async(client, message) => {
             totalSeconds %= 3600;
             let minutes = Math.floor(totalSeconds / 60);
             let seconds = Math.floor(totalSeconds % 60);
-            const minLeft = ms(timeLeft, { long: true });
+              const minLeft = ms(timeLeft, { long: true });
               const hourLeft = ms(timeLeft, { long: true });
               if(timeLeft > 60000 && timeLeft < 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${minLeft} more before reusing the \`${command.name}\` command. `));
