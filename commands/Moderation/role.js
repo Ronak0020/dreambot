@@ -8,7 +8,7 @@ module.exports = {
     example: "role @Ronak @Member",
     cooldown: 5,
     run: async (client, message, args) => {
-        if (!message.member.hasPermission("MANAGE_ROLES")) return message.reply(`**You do not have permission to use this command!**\n Please contact a staff member.`);
+        if (!message.member.permissions.has("MANAGE_ROLES")) return message.reply(`**You do not have permission to use this command!**\n Please contact a staff member.`);
         let rMember = message.guild.members.cache.get(message.mentions.users.first().id) || message.guild.members.cache.get(args[0]);
         if (!rMember) return message.channel.send(`Didn't you forget to mention the user?`).then(m => m.delete({timeout: 10000}));
         let role = args.slice(1).join(" ");

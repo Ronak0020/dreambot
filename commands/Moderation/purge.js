@@ -11,17 +11,14 @@ module.exports = {
             message.delete();
         }
     
-        // Member doesn't have permissions
         if (!message.member.permissions.has("MANAGE_MESSAGES")) {
             return message.reply("You can't delete messages... You need something called **Permissions** to use this command.").then(m => m.delete({timeout: 5000}));
         }
 
-        // Check if args[0] is a number
         if (isNaN(args[0]) || parseInt(args[0]) <= 0) {
             return message.reply("Hmm... How about you provide me a valid number which is greater than 0?").then(m => m.delete({timeout: 5000}));
         }
 
-        // Maybe the bot can't delete messages
         if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) {
             return message.reply("Sorry... I can't delete messages. I do not have permissions to do so.").then(m => m.delete({timeout: 5000}));
         }

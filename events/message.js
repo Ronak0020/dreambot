@@ -32,7 +32,7 @@ module.exports = async(client, message) => {
       await newServer.save().catch(e => console.log(e));
     }
 
-    const prefix = server.prefix;
+    const prefix = "a.";
     
     //====================LEVELS===================
     if(server.levelModule && !message.content.toLowerCase().startsWith(prefix) && !server.blacklistedChannels.includes(message.channel.id)) {
@@ -94,15 +94,13 @@ module.exports = async(client, message) => {
             totalSeconds %= 3600;
             let minutes = Math.floor(totalSeconds / 60);
             let seconds = Math.floor(totalSeconds % 60);
-              const minLeft = ms(timeLeft, { long: true });
-              const hourLeft = ms(timeLeft, { long: true });
-              if(timeLeft > 60000 && timeLeft < 3600000) {
+              /*if(timeLeft > 60000 && timeLeft < 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${minLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft > 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${hourLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft < 60000) {
                 return message.reply(embed.setDescription(`Please wait ${timeLeft.toFixed(1) / 1000} more second(s) before reusing the \`${command.name}\` command. `));
-              }
+              }*/
           }
 
           timestamps.set(message.author.id, now);
