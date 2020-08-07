@@ -32,7 +32,7 @@ module.exports = async(client, message) => {
       await newServer.save().catch(e => console.log(e));
     }
 
-    const prefix = "a.";
+    const prefix = server.prefix;
     
     //====================LEVELS===================
     if(server.levelModule && !message.content.toLowerCase().startsWith(prefix) && !server.blacklistedChannels.includes(message.channel.id)) {
