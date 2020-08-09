@@ -1,5 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
+const serverUser = require("../../models/serverUser");
 const { promptMessage } = require("../../utils/utils.js");
 
 module.exports = {
@@ -45,7 +46,18 @@ module.exports = {
             return message.reply("I can't kick that person due to either my role is not high enough or the member is an Admin.")
                 .then(m => m.delete({timeout: 10000}));
         }
-        
+        let user = await serverUser.findOne({
+          userID: toBan.id,
+          serverID: message.guild.id
+        }).catch(e => console.log(e));
+      if(!user) {
+        const newserverUser = new serverUser({
+          serverID: message.guild.id,
+          userID: toBan.id,
+          kickCount: 1
+        })
+        await newserverUser.save().catch(e => console.log(e));
+      }
         const embed = new MessageEmbed()
             .setColor("#ff0000")
             .setThumbnail(toBan.user.displayAvatarURL)
@@ -70,7 +82,9 @@ module.exports = {
                      .then((DMChannel) => {
                      	DMChannel.send(`You were kicked from server __${message.guild.name}__ \n *REASON :-*\n **${reason}**`)
                      	.then(() => {
-                     		toBan.kick(reason)
+                     		toBan.kick(reason);
+                        user.kickCount += 1;
+                        user.save().catch(e => console.log(e));
                          })
                         })
 

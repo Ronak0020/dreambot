@@ -1,4 +1,5 @@
 module.exports = class Util {
+  
     static getMember(message, toFind = '') {
         toFind = toFind.toLowerCase();
 
@@ -19,9 +20,11 @@ module.exports = class Util {
             
         return target;
     }
+  
     static removeDuplicates(arr) {
 		return [...new Set(arr)];
     }
+  
     static replaceLevelMessage(msg, user, level) {
         return msg
         .replace(/{memberMention}/gi, "<@" + user.id + ">")
@@ -38,4 +41,11 @@ module.exports = class Util {
            .awaitReactions(filter, { max: 1, time: time})
             .then(collected => collected.first() && collected.first().emoji.name);
   }
+  
+  static formatBytes(bytes) {
+		if (bytes === 0) return '0 Bytes';
+		const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+		const i = Math.floor(Math.log(bytes) / Math.log(1024));
+		return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
+	}
 }

@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const serverUser = require("../../models/serverUser");
 const ms = require("ms");
 
 module.exports = {
@@ -33,11 +34,25 @@ module.exports = {
             }
           }
         let mutetime = args[1];
-        if(!toMute.roles.cache.has(muterole.id) && mutetime) {
+        serverUser.findOne({
+          userID: toMute.id,
+          serverID: message.guild.id
+        }, async(err, user) => {
+          if(err) console.log(err);
+          if(!user) {
+            const newUser = new serverUser({
+              serverID: message.guild.id,
+              userID: toMute.id,
+              muteCount: 1
+            })
+            await newUser.save().catch(e => console.log(e));
+          }
+          if(!toMute.roles.cache.has(muterole.id) && mutetime) {
             
         await(toMute.roles.add(muterole.id));
         message.channel.send("User **" + toMute.displayName + "** has been successfully been muted for " + ms(ms(mutetime), {long: true}));
-          
+          user.muteCount += 1;
+            await user.save().catch(e => console.log(e));
           setTimeout(async() => {
             if(toMute.roles.cache.has(muterole.id)) {
               await(toMute.roles.remove(muterole.id))
@@ -48,8 +63,11 @@ module.exports = {
         } else if(!toMute.roles.cache.has(muterole.id) && !mutetime) {
             
             toMute.roles.add(muterole.id);
-        message.channel.send("User **" + toMute.displayName + "** has been successfully muted!")
+        message.channel.send("User **" + toMute.displayName + "** has been successfully muted!");
+          user.muteCount += 1;
+          await user.save().catch(e => console.log(e));
         }
+        })
         
       }
     }

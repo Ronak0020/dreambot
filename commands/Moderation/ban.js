@@ -1,5 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
+const serverUser = require("../../models/serverUser");
 const { promptMessage } = require("../../utils/utils.js");
 
 module.exports = {
@@ -46,6 +47,19 @@ module.exports = {
                 .then(m => m.delete({timeout: 10000}));
         }
         
+      let user = await serverUser.findOne({
+          userID: toBan.id,
+          serverID: message.guild.id
+        }).catch(e => console.log(e));
+      if(!user) {
+        const newserverUser = new serverUser({
+          serverID: message.guild.id,
+          userID: toBan.id,
+          banCount: 1
+        })
+        await newserverUser.save().catch(e => console.log(e));
+      }
+      
         const embed = new MessageEmbed()
             .setColor("#ff0000")
             .setThumbnail(toBan.user.displayAvatarURL)
@@ -70,7 +84,9 @@ module.exports = {
                      .then((DMChannel) => {
                      	DMChannel.send(`You were banned from server __${message.guild.name}__ \n *REASON :-*\n **${reason}**`)
                      	.then(() => {
-                     		toBan.ban(reason)
+                     		toBan.ban(reason);
+                        user.banCount += 1;
+                        user.save().catch(e => console.log(e));
                          })
                         })
 

@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const moment = require('moment');
 const { getMember } = require("../../utils/utils");
+const suser = require("../../models/serverUser");
 
 const flags = {
 	DISCORD_EMPLOYEE: '<:3942_DiscordStaff:739397592747606016>',
@@ -40,11 +41,18 @@ module.exports = {
             let userFlags = "None";
 			if(member.user.flags !== undefined) userFlags = member.user.flags.toArray().map(flag => flags[flag]).join(', ');
 
-		const embed = new MessageEmbed()
-			.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }))
+		suser.findOne({
+      serverID: message.guild.id,
+      userID: member.id
+    }, async(err, user) => {
+      if(err) console.log(err);
+      let embed;
+      if(!user) {
+        embed = new MessageEmbed()
+			      .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }))
             .setColor(member.displayHexColor || '#fa69fd')
             .setFooter(client.user.username, client.user.displayAvatarURL())
-			.addField('User Information', [
+			      .addField('User Information', [
 				`**-> Username:** ${member.user.username}`,
 				`**-> Discriminator:** ${member.user.discriminator}`,
 				`**-> ID:** ${member.id}`,
@@ -54,13 +62,38 @@ module.exports = {
 				`**-> Game:** ${member.user.presence.game || 'Not playing a game.'}`,
 				`\u200b`
 			], true)
-			.addField('Member Information', [
+			      .addField('Member Information', [
 				`**-> Highest Role:** ${member.roles.highest.id === message.guild.id ? 'None' : member.roles.highest.name}`,
                 `**-> Server Join Date:** ${moment(member.joinedAt).format('LL LTS')}`,
                 `**-> Total Roles:** ${member.roles.cache.size}`,
 				`**-> Hoist Role:** ${member.roles.hoist ? member.roles.hoist.name : 'None'}`,
 				`\u200b`
 			], true);
+      } else if(user) {
+      embed = new MessageEmbed()
+			      .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }))
+            .setColor(member.displayHexColor || '#fa69fd')
+            .setFooter(client.user.username, client.user.displayAvatarURL())
+			      .addField('User Information', [
+				`**-> Username:** ${member.user.username}`,
+				`**-> Discriminator:** ${member.user.discriminator}`,
+				`**-> ID:** ${member.id}`,
+				`**-> Badges:** ${userFlags}`,
+				`**-> Time Created:** ${moment(member.user.createdTimestamp).format('LT')} ${moment(member.user.createdTimestamp).format('LL')} (${moment(member.user.createdTimestamp).fromNow()})`,
+				`**-> Status:** ${member.user.presence.status}`,
+				`**-> Game:** ${member.user.presence.game || 'Not playing a game.'}`,
+				`\u200b`
+			], true)
+			      .addField('Member Information', [
+				`**-> Highest Role:** ${member.roles.highest.id === message.guild.id ? 'None' : member.roles.highest.name}`,
+                `**-> Server Join Date:** ${moment(member.joinedAt).format('LL LTS')}`,
+                `**-> Total Roles:** ${member.roles.cache.size}`,
+				`**-> Hoist Role:** ${member.roles.hoist ? member.roles.hoist.name : 'None'}`,
+        `**-> Total Warnings | Mutes | Kicks | Bans :** ${user.warnReason.length} | ${user.muteCount} | ${user.kickCount} | ${user.banCount}`,
+				`\u200b`
+			], true);
+      }
 		return message.channel.send(embed);
+    })
     }
 }
