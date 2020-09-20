@@ -73,7 +73,7 @@ module.exports = {
             .setColor("GREEN")
             .setFooter(client.user.username, client.user.displayAvatarURL())
             .setAuthor(toBan.user.username, toBan.user.displayAvatarURL())
-            .setDescription(`Are you sure you want to ban ${toBan}?\n**This verification will become invalid in 30 seconds.**`)
+            .setDescription(`Are you sure you want to ban ${toBan} for reason: ${reason}?\n**This verification will become invalid in 30 seconds.**`)
 
         await message.channel.send(promptEmbed).then(async msg => {
             const emoji = await promptMessage(msg, message.author, 30, ["✅", "❌"]);

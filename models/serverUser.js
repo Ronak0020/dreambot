@@ -9,7 +9,7 @@ const user = mongoose.Schema({
     banCount: {type: Number, default: 0},
     kickCount: {type: Number, default: 0},
     AFK: {type: Boolean, default: false},
-    AFKreason: {type: String, default: "AFK"},
+    AFKreason: {type: String, default: ""},
     AFKtime: {type: String, default: ""}
 });
 

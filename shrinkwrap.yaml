@@ -1,10 +1,12 @@
 dependencies:
   ascii-table: 0.0.9
   common-tags: 1.8.0
-  discord.js: 12.2.0
+  discord-giveaways: 4.2.1
+  discord.js: 12.3.1
   moment: 2.27.0
-  mongoose: 5.9.27
+  mongoose: 5.10.2
   ms: 2.1.2
+  os: 0.1.1
   random-puppy: 1.1.0
   snekfetch: 4.0.4
 packages:
@@ -38,23 +40,23 @@ packages:
     dev: false
     resolution:
       integrity: sha1-x57Zf380y48robyXkLzDZkdLS3k=
-  /bl/2.2.0:
+  /bl/2.2.1:
     dependencies:
       readable-stream: 2.3.7
       safe-buffer: 5.2.1
     dev: false
     resolution:
-      integrity: sha512-wbgvOpqopSr7uq6fJrLH8EsvYMJf9gzfo2jCsL2eTy75qXPukA4pCgHamOQkZtY5vmfVtjB+P3LNlMHW5CEZXA==
+      integrity: sha512-6Pesp1w0DEX1N550i/uGV/TqucVL4AM/pgThFSN/Qq9si1/DF9aIHs1BxD8V/QU0HoeHO6cQRTAuYnLPKq1e4g==
   /bluebird/3.5.1:
     dev: false
     resolution:
       integrity: sha512-MKiLiV+I1AA596t9w1sQJ8jkiSr5+ZKi0WKrYGUn6d1Fx+Ij4tIj+m2WMQSGczs5jZVxV339chE8iwk6F64wjA==
-  /bson/1.1.4:
+  /bson/1.1.5:
     dev: false
     engines:
       node: '>=0.6.19'
     resolution:
-      integrity: sha512-S/yKGU1syOMzO86+dGpg2qGoDL0zvzcb262G+gqEy6TgP6rt6z6qxSFX/8X6vLC91P7G7C3nLs0+bvDzmvBA3Q==
+      integrity: sha512-kDuEzldR21lHciPQAIulLs1LZlCXdLziXI6Mb/TDkwXhb//UORJNPXgcRs2CuO4H0DcMkpfT3/ySsP3unoZjBg==
   /capture-stack-trace/1.0.1:
     dev: false
     engines:
@@ -93,6 +95,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
+  /deepmerge/4.2.2:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==
   /delayed-stream/1.0.0:
     dev: false
     engines:
@@ -105,7 +113,13 @@ packages:
       node: '>=0.10'
     resolution:
       integrity: sha512-OfzPuSZKGcgr96rf1oODnfjqBFmr1DVoc/TrItj3Ohe0Ah1C5WX5Baquw/9U9KovnQ88EqmJbD66rKYUQYN1tQ==
-  /discord.js/12.2.0:
+  /discord-giveaways/4.2.1:
+    dependencies:
+      deepmerge: 4.2.2
+    dev: false
+    resolution:
+      integrity: sha512-nYXAsEgbRiWIyipmkKFyh5G+Ivhtswdbb8pv8Vd6sTZ5g9LWA6cWyt39zT1Hnmf1u+UKg95hITp4fW1kcZEeyg==
+  /discord.js/12.3.1:
     dependencies:
       '@discordjs/collection': 0.1.6
       '@discordjs/form-data': 3.0.1
@@ -118,15 +132,8 @@ packages:
     dev: false
     engines:
       node: '>=12.0.0'
-    peerDependencies:
-      bufferutil: ^4.0.1
-      erlpack: discordapp/erlpack
-      libsodium-wrappers: ^0.7.6
-      sodium: ^3.0.2
-      utf-8-validate: ^5.0.2
-      zlib-sync: ^0.1.6
     resolution:
-      integrity: sha512-Ueb/0SOsxXyqwvwFYFe0msMrGqH1OMqpp2Dpbplnlr4MzcRrFWwsBM9gKNZXPVBHWUKiQkwU8AihXBXIvTTSvg==
+      integrity: sha512-mSFyV/mbvzH12UXdS4zadmeUf8IMQOo/YdunubG1wWt1xjWvtaJz/s9CGsFD2B5pTw1W/LXxxUbrQjIZ/xlUdw==
   /duplexer3/0.1.4:
     dev: false
     resolution:
@@ -224,10 +231,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
-  /mongodb/3.5.10:
+  /mongodb/3.6.0:
     dependencies:
-      bl: 2.2.0
-      bson: 1.1.4
+      bl: 2.2.1
+      bson: 1.1.5
       denque: 1.4.1
       require_optional: 1.0.1
       safe-buffer: 5.2.1
@@ -237,18 +244,18 @@ packages:
     optionalDependencies:
       saslprep: 1.0.3
     resolution:
-      integrity: sha512-p/C48UvTU/dr/PQEDKfb9DsCVDJWXGmdJNFC+u5FPmTQVtog69X6D8vrWHz+sJx1zJnd96sjdh9ueo7bx2ILTw==
+      integrity: sha512-/XWWub1mHZVoqEsUppE0GV7u9kanLvHxho6EvBxQbShXTKYF9trhZC2NzbulRGeG7xMJHD8IOWRcdKx5LPjAjQ==
   /mongoose-legacy-pluralize/1.0.2:
     dev: false
     peerDependencies:
       mongoose: '*'
     resolution:
       integrity: sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
-  /mongoose/5.9.27:
+  /mongoose/5.10.2:
     dependencies:
-      bson: 1.1.4
+      bson: 1.1.5
       kareem: 2.3.1
-      mongodb: 3.5.10
+      mongodb: 3.6.0
       mongoose-legacy-pluralize: 1.0.2
       mpath: 0.7.0
       mquery: 3.2.2
@@ -261,7 +268,7 @@ packages:
     engines:
       node: '>=4.0.0'
     resolution:
-      integrity: sha512-N8zj4pj9J2xJ2BnQ4NiIHEtmjPldtbmbEZOMz4phLTQr3KFWPR0T0I6EzQxNioHwmDbHD4VFzbEd755oD2SJxA==
+      integrity: sha512-VO5eZawEMFh2gx9XPg9ZafzFg5eIVs4R7PW6kK1MFqBq34YD7GomkalYWVt02HctvTPDI1mkXsm52LXNZR1NxA==
   /mpath/0.7.0:
     dev: false
     engines:
@@ -294,6 +301,10 @@ packages:
       node: 4.x || >=6.0.0
     resolution:
       integrity: sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+  /os/0.1.1:
+    dev: false
+    resolution:
+      integrity: sha1-IIhF6J4ZOtTZcUdLk5R3NqVtE/M=
   /prepend-http/1.0.4:
     dev: false
     engines:
@@ -461,9 +472,11 @@ shrinkwrapVersion: 3
 specifiers:
   ascii-table: 0.0.9
   common-tags: ^1.8.0
+  discord-giveaways: ^4.2.1
   discord.js: ^12.2.0
   moment: ^2.27.0
   mongoose: ^5.9.27
   ms: ^2.1.2
+  os: ^0.1.1
   random-puppy: ^1.1.0
   snekfetch: ^4.0.4

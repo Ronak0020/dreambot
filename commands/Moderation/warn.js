@@ -37,12 +37,10 @@ module.exports = {
                 await user.save().catch(e => console.log(e));
             }
             const embed = new Discord.MessageEmbed()
-            .setTitle("⚠ You have been warned! ⚠")
-            .setDescription(`**Server -** ${message.guild.name}\n**Moderator -** ${message.author.username}\n**Reason -** ${reason}\n**Date -** ${created}`)
             .setColor("RED")
-            .setFooter(client.user.username, client.user.displayAvatarURL())
-            target.send(embed);
-            message.channel.send(`Successfully warned **${target.user.tag}**!`)
+            .setFooter(client.user.username, client.user.displayAvatarURL());
+            target.send(embed.setTitle("⚠ You have been warned! ⚠").setDescription(`**Server -** ${message.guild.name}\n**Moderator -** ${message.author.username}\n**Reason -** ${reason}\n**Date -** ${created}`));
+            message.channel.send(embed.setTitle("⚠ User has been warned! ⚠").setDescription(`**Server -** ${target.displayName}\n**Moderator -** ${message.author.username}\n**Reason -** ${reason}\n**Date -** ${created}`))
         })
     }
 }

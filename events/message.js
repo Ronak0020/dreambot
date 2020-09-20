@@ -3,6 +3,7 @@ const fs = require("fs");
 const ms = require("ms");
 const mongoose = require("mongoose");
 const Server = require("../models/server");
+const serverUser = require("../models/serverUser");
 const Levels = require("../utils/levels.js");
 const {replaceLevelMessage} = require("../utils/utils");
 const cooldowns = new Collection();
@@ -52,6 +53,25 @@ module.exports = async(client, message) => {
         }
       }
     }
+    
+    //====================AFK=====================
+    const target = message.mentions.users.first() || message.author;
+    serverUser.findOne({
+      userID: target.id,
+      serverID: message.guild.id
+    }, async(err, user) => {
+      if(err) console.log(err);
+      if(user) {
+        if(user.AFK && user.userID !== message.author.id) {
+          message.reply(`**${target.username}** is currently AFK: ${user.AFKreason} --(**Went AFK:** ${ms(Date.now() - parseInt(user.AFKtime), {long: true})} ago)`)
+        } else if(user.AFK && user.userID === message.author.id) {
+          user.AFK = false;
+          await user.save().catch(e => console.log(e));
+          message.reply(`Welcome back! I removed your AFK!`);
+        }
+      }
+    })
+    
 
     //====================MAIN=====================
     if (message.author.bot) return;
@@ -89,18 +109,15 @@ module.exports = async(client, message) => {
             .setFooter(client.user.username, client.user.displayAvatarURL())
             .setTimestamp();
               const timeLeft = expirationTime - now;
-            let totalSeconds = (timeLeft / 1000);
-            let hours = Math.floor(totalSeconds / 3600);
-            totalSeconds %= 3600;
-            let minutes = Math.floor(totalSeconds / 60);
-            let seconds = Math.floor(totalSeconds % 60);
-              /*if(timeLeft > 60000 && timeLeft < 3600000) {
+              const minLeft = ms(timeLeft, { long: true });
+              const hourLeft = ms(timeLeft, { long: true });
+              if(timeLeft > 60000 && timeLeft < 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${minLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft > 3600000) {
                 return message.reply(embed.setDescription(`Please wait ${hourLeft} more before reusing the \`${command.name}\` command. `));
               } else if(timeLeft < 60000) {
                 return message.reply(embed.setDescription(`Please wait ${timeLeft.toFixed(1) / 1000} more second(s) before reusing the \`${command.name}\` command. `));
-              }*/
+              }
           }
 
           timestamps.set(message.author.id, now);

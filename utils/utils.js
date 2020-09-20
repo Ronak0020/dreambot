@@ -1,3 +1,6 @@
+const yes = ['yes', 'y', 'ye', 'yeah', 'yup', 'yea', 'ya', 'hai', 'はい', 'correct'];
+const no = ['no', 'n', 'nah', 'nope', 'nop', 'iie', 'いいえ', 'non', 'fuck off'];
+
 module.exports = class Util {
   
     static getMember(message, toFind = '') {
@@ -48,4 +51,32 @@ module.exports = class Util {
 		const i = Math.floor(Math.log(bytes) / Math.log(1024));
 		return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 	}
+  
+  static async verify(channel, user, { time = 30000, extraYes = [], extraNo = [] } = {}) {
+		const filter = res => {
+			const value = res.content.toLowerCase();
+			return (user ? res.author.id === user.id : true)
+				&& (yes.includes(value) || no.includes(value) || extraYes.includes(value) || extraNo.includes(value));
+		};
+		const verify = await channel.awaitMessages(filter, {
+			max: 1,
+			time
+		});
+		if (!verify.size) return 0;
+		const choice = verify.first().content.toLowerCase();
+		if (yes.includes(choice) || extraYes.includes(choice)) return true;
+		if (no.includes(choice) || extraNo.includes(choice)) return false;
+		return false;
+	}
+  
+  static async generateEmbed(client, message, embed, {color = "#ffff00", title = " ", description = " ", image = " "}) {
+    const newembed = new embed
+    .setColor(color)
+    .setTimestamp()
+    .setFooter(client.user.username, client.user.displayAvatarURL())
+    .setTitle(title)
+    .setDescription(description);
+    newembed.setImage(image);
+    return newembed;
+  }
 }

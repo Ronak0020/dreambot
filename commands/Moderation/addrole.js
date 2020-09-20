@@ -11,7 +11,7 @@ module.exports = {
   run: async(client, message, args) => {
     let rolename = args.join(" ");
     let rolecolor = args.slice(args.length - 1);
-    if(rolecolor[0].startsWith("#")) rolename = args.slice(0, args.length - 1).join(" ");
+    if(rolecolor[0].startsWith("#") && rolecolor[0].length === 7) rolename = args.slice(0, args.length - 1).join(" ");
     if(!message.member.permissions.has("MANAGE_ROLES")) return message.reply("Uhm... You do not have permissions to do so...").then(m => m.delete({timeout: 10000}));
     if(!rolename) return message.reply("I can not create a role with 'invisible' name. Please provide me a name for the role.").then(m => m.delete({timeout: 10000}));
     message.guild.roles.create({

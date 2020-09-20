@@ -1,12 +1,13 @@
 const Discord = require("discord.js");
 const Server = require("../../models/server");
-const options = ["levelupmessageredirect", "levelupmessage", "levelupmessagechannel", "levelupmessagemodule", "levelmodule" ,"setprefix", "setxp", "blacklistchannel", "blacklistcommand", "whitelistchannel", "whitelistcommand"];
+const options = ["levelupmessageredirect", "levelupmessage", "levelupmessagechannel", "levelupmessagemodule", "levelmodule" ,"setprefix", "setxp", "blacklistchannel", "blacklistcommand", "whitelistchannel", "whitelistcommand", "antialt", "antialtage"];
 const yes = ["yes", "on", "enable", "enabled"];
 const no = ["no", "off", "disable", "disabled"];
 const option2 = ["no", "off", "disable", "disabled", "yes", "on", "enable", "enabled"];
 const util = require("../../utils/utils");
 const levelplaceholder = ["`{memberMention}`", "`{memberUsername}`", "`{memberTag}`", "`{level}`", "`{currentXp}`"]
 const Levels = require("../../utils/levels.js");
+const ms = require("ms");
 
 module.exports = {
     name: "configure",
@@ -223,6 +224,22 @@ To whitelist a command, provide the command name with this command. If a command
             return message.channel.send(embed.setDescription("Command has been successfully whitelisted! Everyone can use that command in this server now!"))
           }
           break;
+        case "antialt":
+          server.antialtModule = server.antialtModule ? false : true;
+          await server.save().catch(e => console.log(e));
+          return message.channel.send(embed.setDescription(`Anti-Alt module has been successfully ${server.antialtModule ? "Enabled" : "Disabled"}! All the accounts which were created in past ${ms(server.antialtAge, {long: true})} (You can chnge this setting by using \`config antialtage <new value>\` command.)`));
+          break;
+        case "antialtage":
+          if(!args[1]) return message.channel.send(embed.setDescription(`The current Anti Alt minimum age is **${ms(server.antialtAge, {long: true})}**
+To change this setting, use \`config antialtage <new value>\``));
+          if(args[1]) {
+            if(ms(args[1]) < 1000*60*60*24 || ms(args[1]) > 1000*60*60*24*7*8) return message.reply("You can not set the minimum account age to be either more than 8 weeks or less than 1 day. It must be between 1 day and 8 weeks.");
+            embed.addField("Previous Value", ms(server.antialtAge, {long: true}));
+            server.antialtAge = ms(args[1]);
+            await server.save().catch(e => console.log(e));
+            embed.addField("New Value", ms(server.antialtAge, {long: true}));
+            return message.channel.send(embed.setDescription(`Successfully changed the Anti Alt minimum account age!`));
+          }
       }
   });
 }
